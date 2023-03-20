@@ -1,0 +1,71 @@
+[Unit]
+Description=Display multiple TOTP during boot
+Requires=dev-tpm0.device
+Wants=systemd-vconsole-setup.service
+After=systemd-vconsole-setup.service dev-tpm0.device
+Before=systemd-ask-password-console.service cryptographic_id.service
+Conflicts=multi-user.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+Environment="TPM2TOTP_TCTI=device:/dev/tpm0"
+ExecStart=-/usr/bin/sh /usr/lib/multi-tpm2-totp/show.sh /etc/multi-tpm2-totp/
+StandardInput=tty
+StandardOutput=tty
+StandardError=tty
+TimeoutStartSec=10min
+
+TemporaryFileSystem=/:rw
+BindReadOnlyPaths=/usr
+BindReadOnlyPaths=/lib
+BindReadOnlyPaths=/lib64
+BindReadOnlyPaths=/etc/multi-tpm2-totp/
+BindPaths=/dev/tpm0
+
+AmbientCapabilities=
+CapabilityBoundingSet=
+DeviceAllow=/dev/tpm0 rw
+DeviceAllow=/dev/tpmrm0 rw
+DeviceAllow=/dev/console rw
+DevicePolicy=closed
+IPAddressDeny=any
+LockPersonality=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateIPC=true
+PrivateNetwork=true
+PrivateTmp=true
+PrivateUsers=true
+ProcSubset=pid
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=strict
+RemoveIPC=true
+RestrictAddressFamilies=none
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SystemCallArchitectures=native
+SystemCallFilter=~@clock
+SystemCallFilter=~@cpu-emulation
+SystemCallFilter=~@debug
+SystemCallFilter=~@module
+SystemCallFilter=~@mount
+SystemCallFilter=~@obsolete
+SystemCallFilter=~@privileged
+SystemCallFilter=~@raw-io
+SystemCallFilter=~@reboot
+SystemCallFilter=~@resources
+SystemCallFilter=~@swap
+
+[Install]
+WantedBy=sysinit.target

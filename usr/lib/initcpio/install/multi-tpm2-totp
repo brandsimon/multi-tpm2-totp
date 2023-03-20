@@ -1,0 +1,49 @@
+#!/bin/bash
+
+build() {
+	local mod
+	if [[ ${TPM_MODULES} ]]; then
+		for mod in ${TPM_MODULES}; do
+			add_module "${mod}"
+		done
+	else
+		add_all_modules /tpm/
+	fi
+
+	add_systemd_unit multi-tpm2-totp.service
+	add_full_dir /etc/multi-tpm2-totp
+	add_file /usr/lib/udev/rules.d/*tpm-udev.rules
+	add_file /usr/lib/multi-tpm2-totp/show.sh
+	add_binary tpm2-totp
+
+	cat <<EOF | add_systemd_drop_in initrd-switch-root.service multi-tpm2-totp
+[Unit]
+Requires=multi-tpm2-totp.service
+After=multi-tpm2-totp.service
+EOF
+	cat <<EOF | add_systemd_drop_in systemd-cryptsetup@.service multi-tpm2-totp
+[Unit]
+Requires=multi-tpm2-totp.service
+After=multi-tpm2-totp.service
+EOF
+}
+
+help() {
+	cat <<HELPEOF
+This hook displays multiple time-based one-time password (TOTP) sealed to a
+Trusted Platform Module (TPM) to ensure that the boot process has not been
+tampered with. To set this up, secrets needs to be generated first and sealed
+to the TPM using
+
+tpm2-totp generate --nvindex INDEX
+printf INDEX > /etc/multi-tpm2-totp/LABEL
+
+This stores the secret in the TPM and displays it to the user so that it can
+be recorded on a different device (e.g. a TOTP app). When the hook is run, the
+TOTP is calculated and displayed together with the current time so that it can
+be compared with the output of the second device. This will only be successful
+and show a matching output if the boot process has not changed (new UEFI
+firmware, different boot loader, ...).
+
+HELPEOF
+}
