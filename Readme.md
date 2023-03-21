@@ -20,3 +20,10 @@ echo "${nvindex}" > /etc/multi-tpm2-totp/LABEL
 ```
 
 Now rebuild your initramfs.
+
+## Delete unneeded totp key
+
+```bash
+tpm2_nvundefine "$(cat /etc/multi-tpm2-totp/LABEL)"
+rm /etc/multi-tpm2-totp/LABEL
+```
