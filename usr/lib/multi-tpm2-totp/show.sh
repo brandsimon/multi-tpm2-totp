@@ -23,6 +23,9 @@ print_dir() {
 }
 cd "${1}" || exit 1
 while true; do
+	# calculate curr here, so when the round starts at .59 and
+	# ends at .00, new current OTPs will be printed
+	curr="$(date +%s)"
 	printf '\n'
 	date +"%Y-%m-%d %H:%M:%S:"
 	print_dir "." " "
@@ -33,7 +36,6 @@ while true; do
 		fi
 	done
 	printf 'Press CTRL+C to continue\n'
-	curr="$(date +%s)"
 	wait="$((30 - curr % 30))"
 	if [ "${wait}" = "0" ]; then
 		sleep 30
