@@ -14,6 +14,7 @@ build() {
 	add_full_dir /etc/multi-tpm2-totp
 	add_file /usr/lib/udev/rules.d/*tpm-udev.rules
 	add_file /usr/lib/multi-tpm2-totp/show.sh
+	add_binary date
 	add_binary tail
 	add_binary tpm2-totp
 
