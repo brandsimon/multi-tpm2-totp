@@ -7,7 +7,7 @@ print_totp() {
 	if totp="$(tpm2-totp calculate --nvindex "${index}" 2>&1)"; then
 		printf '%s%s %s\n' "${gap}" "${totp}" "${name}"
 	else
-		err="$(printf "%s" "${totp}" | tail -n 1)"
+		err="$(printf "%s" "${totp}")"
 		printf '%s ERROR %s: %s\n' "${gap}" "${name}" "${err}"
 	fi
 }

@@ -11,6 +11,7 @@ DefaultDependencies=no
 Type=oneshot
 RemainAfterExit=true
 Environment="TPM2TOTP_TCTI=device:/dev/tpm0"
+Environment="TSS2_LOG=all+NONE"
 ExecStart=-/usr/bin/sh /usr/lib/multi-tpm2-totp/show.sh /etc/multi-tpm2-totp/
 StandardInput=tty
 StandardOutput=tty
