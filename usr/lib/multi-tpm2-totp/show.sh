@@ -23,10 +23,8 @@ print_dir() {
 }
 cd "${1}" || exit 1
 while true; do
-	# calculate curr here, so when the round starts at .59 and
-	# ends at .00, new current OTPs will be printed
-	curr="$(date +%s)"
 	printf '\n'
+	before="$(date +%s)"
 	date +"%Y-%m-%d %H:%M:%S:"
 	print_dir "." " "
 	for dir in *; do
@@ -36,6 +34,13 @@ while true; do
 		fi
 	done
 	printf 'Press CTRL+C to continue\n'
+	curr="$(date +%s)"
+	if  [ "$((before % 60 / 30))" != "$((curr % 60 / 30))" ]; then
+		# this round started before the current 30s interval, but
+		# ended afterwards. Some TOTP might be out of date, so
+		# calculate them again.
+		continue
+	fi
 	wait="$((30 - curr % 30))"
 	if [ "${wait}" = "0" ]; then
 		sleep 30
