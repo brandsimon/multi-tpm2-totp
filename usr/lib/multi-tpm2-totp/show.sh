@@ -1,14 +1,17 @@
 #!/bin/sh
+TAB="    "
 print_totp() {
 	name="${1}"
 	label="${2}"
 	gap="${3}"
+	time_gap="                     "
 	index="$(cat "${label}")"
-	if totp="$(tpm2-totp calculate --nvindex "${index}" 2>&1)"; then
+	if totp="$(tpm2-totp calculate --time --nvindex "${index}" 2>&1)"; then
 		printf '%s%s %s\n' "${gap}" "${totp}" "${name}"
 	else
 		err="$(printf "%s" "${totp}")"
-		printf '%s ERROR %s: %s\n' "${gap}" "${name}" "${err}"
+		printf '%s%s ERROR %s: %s\n' \
+			"${gap}" "${time_gap}" "${name}" "${err}"
 	fi
 }
 print_dir() {
@@ -23,14 +26,14 @@ print_dir() {
 }
 cd "${1}" || exit 1
 while true; do
-	printf '\n'
+	printf '\n\n'
 	before="$(date +%s)"
 	date +"%Y-%m-%d %H:%M:%S:"
-	print_dir "." " "
+	print_dir "." "${TAB}"
 	for dir in *; do
 		if [ -d "${dir}" ]; then
-			printf ' %s:\n' "${dir}"
-			print_dir "${dir}" "  "
+			printf '%s%s:\n' "${TAB}" "${dir}"
+			print_dir "${dir}" "${TAB}${TAB}"
 		fi
 	done
 	printf 'Press CTRL+C to continue\n'
