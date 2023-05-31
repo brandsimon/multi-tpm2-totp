@@ -17,7 +17,6 @@ ExecStart=-/usr/bin/sh /usr/lib/multi-tpm2-totp/show.sh /etc/multi-tpm2-totp/
 StandardInput=tty
 StandardOutput=tty
 StandardError=tty
-TTYVTDisallocate=yes
 TimeoutStartSec=10min
 
 TemporaryFileSystem=/:rw
