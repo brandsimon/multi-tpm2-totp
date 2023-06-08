@@ -64,6 +64,7 @@ SystemCallFilter=~@module
 SystemCallFilter=~@mount
 SystemCallFilter=~@obsolete
 SystemCallFilter=~@privileged
+SystemCallFilter=setfsuid
 SystemCallFilter=~@raw-io
 SystemCallFilter=~@reboot
 SystemCallFilter=~@resources
