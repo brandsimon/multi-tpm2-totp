@@ -4,7 +4,7 @@ After=dev-tpm0.device
 After=systemd-vconsole-setup.service
 Before=cryptographic_id.service
 Requires=dev-tpm0.device
-Requires=systemd-vconsole-setup.service
+Wants=systemd-vconsole-setup.service
 Conflicts=multi-user.target
 DefaultDependencies=no
 
