@@ -2,6 +2,7 @@
 Description=Display multiple TOTP during boot
 After=dev-tpm0.device
 After=systemd-vconsole-setup.service
+After=verity-squash-root-notify.service
 Before=cryptographic_id.service
 Requires=dev-tpm0.device
 Wants=systemd-vconsole-setup.service
